@@ -1,0 +1,16 @@
+{
+    "idfInstalled": {
+        "C:\\ttt\\_embedded\\pioduino_01\\packages\\tool-esp_install-v5.5": {
+            "version": "5.5",
+            "path": "C:\\ttt\\_embedded\\pioduino_01\\packages\\tool-esp_install",
+            "features": [
+                "core"
+            ],
+            "targets": [
+                "esp32",
+                "esp32s2",
+                "esp32s3"
+            ]
+        }
+    }
+}

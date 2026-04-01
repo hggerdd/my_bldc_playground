@@ -1,0 +1,9 @@
+{
+    "last_version": "6.1.19",
+    "cid": "567d3035-ecd8-6579-fddc-499cfac3693c",
+    "created_at": 1773781757,
+    "last_check": {
+        "platformio_upgrade": 1774732308,
+        "prune_system": 1774732308
+    }
+}
