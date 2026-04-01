@@ -210,6 +210,22 @@ Zweck:
 
 ### Verwendete Pins
 
+```
+ESP32                SimpleFOC Mini
+------               ----------------
+GPIO25 ------------> IN1
+GPIO26 ------------> IN2
+GPIO27 ------------> IN3
+GPIO4  ------------> EN
+
+GND ---------------- GND
+          \--------- Netzteil GND
+
+12V Netzteil ------> VMOT
+
+Motor:
+U/V/W -------------> Motor
+````
 Sensor:
 
 - `GPIO21`: `SDA`, siehe [src/main_simplefoc_01.cpp](src/main_simplefoc_01.cpp#L29)
