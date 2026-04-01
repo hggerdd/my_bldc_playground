@@ -21,6 +21,16 @@
  * - low voltage limits
  * - low velocity limit
  * - angle control via serial command
+ * 
+ * Todo:
+ * - refactor to use namespaces like:
+ *   namespace Pins {
+ *     static constexpr uint8_t MOSI = 23;
+ *     static constexpr uint8_t MISO = 19;
+ *     static constexpr uint8_t SCK  = 18;
+ *     static constexpr uint8_t CS   = 5;
+ *   }
+ *   --> usage pinMode(Pins::MOSI, OUTPUT);
  */
 #include <Arduino.h>
 #include <Wire.h>
