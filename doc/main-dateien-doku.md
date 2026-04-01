@@ -1,15 +1,14 @@
 # Dokumentation der Main-Dateien in `pioduino_01`
 
 Diese Dokumentation beschreibt nur das Projekt `pioduino_01`.
+Hinweis: Einige `main`-Dateien wurden umbenannt; diese Doku spiegelt die aktuellen Dateinamen wider.
 Grundlage sind die vorhandenen Dateien in:
 
 - `platformio.ini`
-- `src/main.cpp`
 - `src/main_as5600.cpp`
+- `src/main_icm20948_i2c.cpp`
+- `src/main_icm20948_spi.cpp`
 - `src/main_simplefoc_01.cpp`
-- `src/main_spi.cpp`
-
-Es wurden keine Programmdateien geaendert.
 
 ## 1. Projektueberblick
 
@@ -32,53 +31,7 @@ Verwendete Bibliotheken:
 
 ## 2. Main-Dateien im Detail
 
-## 2.1 `src/main.cpp`
-
-Datei: [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L1C1)
-
-Zweck:
-
-- I2C-Test fuer die SparkFun-IMU `ICM-20948`
-- Scan des I2C-Busses beim Start
-- Test beider moeglichen IMU-Adressen `0x68` und `0x69`
-- Fehlerzaehler, Bus-Recovery und ESP-Neustart bei Kommunikationsproblemen
-- geglaettete Teleplot-Ausgabe fuer Accel, Gyro und Magnetometer
-
-### Verwendete Pins
-
-- `GPIO21`: `SDA`, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L11C1)
-- `GPIO22`: `SCL`, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L12C1)
-
-### Externe Komponenten
-
-- ESP32-Board
-- SparkFun `ICM-20948` IMU ueber I2C
-
-### Wichtige Parameter
-
-- `I2C_FREQ_HZ = 100000`: I2C mit 100 kHz, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L13C1)
-- `I2C_FAIL_THRESHOLD = 4`: nach 4 Fehlern wird eine Recovery versucht, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L14C1)
-- `NO_SAMPLE_TIMEOUT_MS = 800`: wenn 800 ms lang keine Daten kommen, wird neu gestartet, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L15C1)
-- `I2C_HARD_RESTART_DELAY_MS = 250`: Wartezeit vor `ESP.restart()`, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L16C1)
-- `MA_WINDOW_SIZE = 10`: Fenster fuer gleitenden Mittelwert, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L17C1)
-- `MA_EPSILON = 0.05`: Ausgabe nur bei relevanter Aenderung, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L18C1)
-- AD0-Autodetektion ueber `initIMUWithAD0(0)` und `initIMUWithAD0(1)`, siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L109C1)
-
-### Sinnvolle Alternativen
-
-- I2C mit `400000`, wenn Verdrahtung kurz und stabil ist
-- `MA_WINDOW_SIZE = 3` bis `5` fuer schnellere Reaktion
-- `MA_WINDOW_SIZE = 20` fuer ruhigere Kurven
-- `MA_EPSILON = 0.01` fuer empfindlichere Ausgabe
-- `NO_SAMPLE_TIMEOUT_MS = 1500` bis `3000`, wenn die IMU nicht durchgehend Daten liefert
-- feste AD0-Vorgabe statt Autodetektion, falls die Beschaltung bekannt ist
-
-### Technische Hinweise
-
-- Die Bibliothek unterstuetzt `begin(TwoWire&, bool ad0val, uint8_t ad0pin)`. Damit sind beide AD0-Zustaende vorgesehen. Siehe [ICM_20948.h](C:/ttt/_embedded/pioduino_01/.pio/libdeps/esp32dev/SparkFun%209DoF%20IMU%20Breakout%20-%20ICM%2020948%20-%20Arduino%20Library/src/ICM_20948.h#L260C1)
-- Die Recovery in dieser Datei erzeugt 9 Clock-Pulse auf `SCL`, wenn der Bus haengt. Siehe [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L88C1)
-
-## 2.2 `src/main_as5600.cpp`
+## 2.1 `src/main_as5600.cpp`
 
 Datei: [main_as5600.cpp](C:/ttt/_embedded/pioduino_01/src/main_as5600.cpp#L1C1)
 
@@ -119,7 +72,91 @@ Zweck:
 - Diese Datei eignet sich als Vorstufe fuer `main_simplefoc_01.cpp`, weil hier nur der Sensor getestet wird.
 - Geprueft wird nur die Erreichbarkeit auf `0x36` und die laufende Winkelausgabe.
 
-## 2.3 `src/main_simplefoc_01.cpp`
+## 2.2 `src/main_icm20948_i2c.cpp`
+
+Datei: [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L1C1)
+
+Zweck:
+
+- I2C-Test fuer die SparkFun-IMU `ICM-20948`
+- Scan des I2C-Busses beim Start
+- Test beider moeglichen IMU-Adressen `0x68` und `0x69`
+- Fehlerzaehler, Bus-Recovery und ESP-Neustart bei Kommunikationsproblemen
+- geglaettete Teleplot-Ausgabe fuer Accel, Gyro und Magnetometer
+
+### Verwendete Pins
+
+- `GPIO21`: `SDA`, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L11C1)
+- `GPIO22`: `SCL`, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L12C1)
+
+### Externe Komponenten
+
+- ESP32-Board
+- SparkFun `ICM-20948` IMU ueber I2C
+
+### Wichtige Parameter
+
+- `I2C_FREQ_HZ = 100000`: I2C mit 100 kHz, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L13C1)
+- `I2C_FAIL_THRESHOLD = 4`: nach 4 Fehlern wird eine Recovery versucht, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L14C1)
+- `NO_SAMPLE_TIMEOUT_MS = 800`: wenn 800 ms lang keine Daten kommen, wird neu gestartet, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L15C1)
+- `I2C_HARD_RESTART_DELAY_MS = 250`: Wartezeit vor `ESP.restart()`, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L16C1)
+- `MA_WINDOW_SIZE = 10`: Fenster fuer gleitenden Mittelwert, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L17C1)
+- `MA_EPSILON = 0.05`: Ausgabe nur bei relevanter Aenderung, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L18C1)
+- AD0-Autodetektion ueber `initIMUWithAD0(0)` und `initIMUWithAD0(1)`, siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L109C1)
+
+### Sinnvolle Alternativen
+
+- I2C mit `400000`, wenn Verdrahtung kurz und stabil ist
+- `MA_WINDOW_SIZE = 3` bis `5` fuer schnellere Reaktion
+- `MA_WINDOW_SIZE = 20` fuer ruhigere Kurven
+- `MA_EPSILON = 0.01` fuer empfindlichere Ausgabe
+- `NO_SAMPLE_TIMEOUT_MS = 1500` bis `3000`, wenn die IMU nicht durchgehend Daten liefert
+- feste AD0-Vorgabe statt Autodetektion, falls die Beschaltung bekannt ist
+
+### Technische Hinweise
+
+- Die Bibliothek unterstuetzt `begin(TwoWire&, bool ad0val, uint8_t ad0pin)`. Damit sind beide AD0-Zustaende vorgesehen. Siehe [ICM_20948.h](C:/ttt/_embedded/pioduino_01/.pio/libdeps/esp32dev/SparkFun%209DoF%20IMU%20Breakout%20-%20ICM%2020948%20-%20Arduino%20Library/src/ICM_20948.h#L260C1)
+- Die Recovery in dieser Datei erzeugt 9 Clock-Pulse auf `SCL`, wenn der Bus haengt. Siehe [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L88C1)
+
+## 2.3 `src/main_icm20948_spi.cpp`
+
+Datei: [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L1C1)
+
+Zweck:
+
+- SPI-Test fuer die SparkFun-IMU `ICM-20948`
+- geglaettete Teleplot-Ausgabe
+- Fehlerzaehler, SPI-Reinitialisierung und Neustart bei Stoerungen
+
+### Verwendete Pins
+
+- `GPIO18`: `SPI_SCK`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L31C1)
+- `GPIO19`: `SPI_MISO`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L32C1)
+- `GPIO23`: `SPI_MOSI`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L33C1)
+- `GPIO5`: `SPI_CS`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L34C1)
+
+### Externe Komponenten
+
+- ESP32-Board
+- SparkFun `ICM-20948` IMU im SPI-Modus
+
+### Wichtige Parameter
+
+- `SPI_FREQ_HZ = 4000000`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L35C1)
+- `SPI_FAIL_THRESHOLD = 4`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L36C1)
+- `NO_SAMPLE_TIMEOUT_MS = 800`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L37C1)
+- `SPI_HARD_RESTART_DELAY_MS = 250`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L38C1)
+- `MA_WINDOW_SIZE = 10`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L39C1)
+- `MA_EPSILON = 0.05`, siehe [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L40C1)
+
+### Sinnvolle Alternativen
+
+- andere freie `CS`-Leitung statt `GPIO5`
+- andere SPI-Pinbelegung ueber `SPI.begin(sck, miso, mosi, ss)`, solange sie zum Boardlayout passt
+- `SPI_FREQ_HZ = 1000000` oder `2000000`, wenn die Verbindung instabil ist
+- hoehere SPI-Frequenz bei sauberer Verdrahtung; 4 MHz ist der Bibliotheks-Default. Siehe [ICM_20948.h](C:/ttt/_embedded/pioduino_01/.pio/libdeps/esp32dev/SparkFun%209DoF%20IMU%20Breakout%20-%20ICM%2020948%20-%20Arduino%20Library/src/ICM_20948.h#L264C1)
+
+## 2.4 `src/main_simplefoc_01.cpp`
 
 Datei: [main_simplefoc_01.cpp](C:/ttt/_embedded/pioduino_01/src/main_simplefoc_01.cpp#L1C1)
 
@@ -247,52 +284,13 @@ Die Datei ist in ihrer Bedeutung nicht ganz konsistent:
 
 Fuer die Einordnung bedeutet das: Die Datei ist aktuell vor allem ein Bring-up- und Tuning-Sketch.
 
-## 2.4 `src/main_spi.cpp`
-
-Datei: [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L1C1)
-
-Zweck:
-
-- SPI-Test fuer die SparkFun-IMU `ICM-20948`
-- geglaettete Teleplot-Ausgabe
-- Fehlerzaehler, SPI-Reinitialisierung und Neustart bei Stoerungen
-
-### Verwendete Pins
-
-- `GPIO18`: `SPI_SCK`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L31C1)
-- `GPIO19`: `SPI_MISO`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L32C1)
-- `GPIO23`: `SPI_MOSI`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L33C1)
-- `GPIO5`: `SPI_CS`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L34C1)
-
-### Externe Komponenten
-
-- ESP32-Board
-- SparkFun `ICM-20948` IMU im SPI-Modus
-
-### Wichtige Parameter
-
-- `SPI_FREQ_HZ = 4000000`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L35C1)
-- `SPI_FAIL_THRESHOLD = 4`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L36C1)
-- `NO_SAMPLE_TIMEOUT_MS = 800`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L37C1)
-- `SPI_HARD_RESTART_DELAY_MS = 250`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L38C1)
-- `MA_WINDOW_SIZE = 10`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L39C1)
-- `MA_EPSILON = 0.05`, siehe [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L40C1)
-
-### Sinnvolle Alternativen
-
-- andere freie `CS`-Leitung statt `GPIO5`
-- andere SPI-Pinbelegung ueber `SPI.begin(sck, miso, mosi, ss)`, solange sie zum Boardlayout passt
-- `SPI_FREQ_HZ = 1000000` oder `2000000`, wenn die Verbindung instabil ist
-- hoehere SPI-Frequenz bei sauberer Verdrahtung; 4 MHz ist der Bibliotheks-Default. Siehe [ICM_20948.h](C:/ttt/_embedded/pioduino_01/.pio/libdeps/esp32dev/SparkFun%209DoF%20IMU%20Breakout%20-%20ICM%2020948%20-%20Arduino%20Library/src/ICM_20948.h#L264C1)
-- Glattungs- und Timeout-Parameter analog zu `main.cpp`
-
 ## 3. Zusammenfassung nach Hardware
 
 ### ICM-20948 ueber I2C
 
 Datei:
 
-- [main.cpp](C:/ttt/_embedded/pioduino_01/src/main.cpp#L1C1)
+- [main_icm20948_i2c.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_i2c.cpp#L1C1)
 
 Pins:
 
@@ -304,7 +302,7 @@ Pins:
 
 Datei:
 
-- [main_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_spi.cpp#L1C1)
+- [main_icm20948_spi.cpp](C:/ttt/_embedded/pioduino_01/src/main_icm20948_spi.cpp#L1C1)
 
 Pins:
 
@@ -344,8 +342,8 @@ Pins:
 Wenn das Ziel die Motorinbetriebnahme ist, ergibt sich aus den vorhandenen Dateien diese sinnvolle Kette:
 
 1. `main_as5600.cpp`: pruefen, ob der Winkelsensor stabil arbeitet
-2. `main.cpp`: pruefen, ob die ICM-20948 ueber I2C sauber arbeitet
-3. `main_spi.cpp`: nur falls die IMU ueber SPI betrieben werden soll
+2. `main_icm20948_i2c.cpp`: pruefen, ob die ICM-20948 ueber I2C sauber arbeitet
+3. `main_icm20948_spi.cpp`: nur falls die IMU ueber SPI betrieben werden soll
 4. `main_simplefoc_01.cpp`: Motor, Sensor und Treiber gemeinsam hochfahren
 
 Die aktuell aktive Build-Datei ist `main_simplefoc_01.cpp`. Siehe [platformio.ini](C:/ttt/_embedded/pioduino_01/platformio.ini#L18C1).
